@@ -4,16 +4,18 @@
 const API_URL = import.meta.env?.VITE_API_URL || 'http://localhost:8000/api/v1';
 
 // Token management
-let accessToken = localStorage.getItem('cic_token') || null;
-let refreshToken = localStorage.getItem('cic_refresh') || null;
+let accessToken = null;
+let refreshToken = null;
+try { accessToken = localStorage.getItem('cic_token') || null; } catch(e) {}
+try { refreshToken = localStorage.getItem('cic_refresh') || null; } catch(e) {}
 
 export const setTokens = (access, refresh) => {
   accessToken = access;
   refreshToken = refresh;
-  if (access) localStorage.setItem('cic_token', access);
-  else localStorage.removeItem('cic_token');
-  if (refresh) localStorage.setItem('cic_refresh', refresh);
-  else localStorage.removeItem('cic_refresh');
+  try { if (access) localStorage.setItem('cic_token', access); } catch(e) {}
+  
+  try { if (refresh) localStorage.setItem('cic_refresh', refresh); } catch(e) {}
+  
 };
 
 export const getToken = () => accessToken;
@@ -22,8 +24,8 @@ export const isLoggedIn = () => !!accessToken;
 export const clearTokens = () => {
   accessToken = null;
   refreshToken = null;
-  localStorage.removeItem('cic_token');
-  localStorage.removeItem('cic_refresh');
+  try { localStorage.removeItem('cic_token'); } catch(e) {}
+  try { localStorage.removeItem('cic_refresh'); } catch(e) {}
 };
 
 // Base fetch with auth + auto refresh
